@@ -8,6 +8,7 @@ const displayPhones = phones => {
 
     const phoneContainer = document.getElementById('phone-container');
     phoneContainer.textContent='';
+   phones=phones.slice(0,10);
     phones.forEach(phone => {
         const divContainer = document.createElement('div');
         divContainer.classList.add('col')

@@ -4,7 +4,7 @@ const loadPhones = async (searchText, dataLimit) => {
     const data = await res.json();
     displayPhones(data.data, dataLimit);
 }
-const displayPhones = (phones,dataLimit) => {
+const displayPhones = (phones, dataLimit) => {
 
     const phoneContainer = document.getElementById('phone-container');
     phoneContainer.textContent = '';
@@ -35,7 +35,9 @@ const displayPhones = (phones,dataLimit) => {
             }</h5>
             <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
                 additional content. This content is a little bit longer.</p>
+                <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#phoneDetailsModal">Show Details</button>
         </div>
+        
     </div>
         `
         phoneContainer.appendChild(divContainer);
@@ -52,9 +54,17 @@ const processSearch = (dataLimit) => {
     loadPhones(searchText, dataLimit);
 }
 
-document.getElementById('btn-search').addEventListener('click', function() {
+document.getElementById('btn-search').addEventListener('click', function () {
     processSearch(10);
 })
+
+document.getElementById('search-Field').addEventListener('keypress', function (events) {
+    if (events.key === 'Enter') {
+        processSearch(10);
+    }
+})
+
+
 const toggleLoader = isLoading => {
     const loader = document.getElementById('loader');
 
@@ -65,6 +75,28 @@ const toggleLoader = isLoading => {
     }
 }
 
-document.getElementById('btn-show-all').addEventListener('click', function(){
+document.getElementById('btn-show-all').addEventListener('click', function () {
     processSearch();
+
 })
+
+const loadPhoneDetails = async (id) => {
+    const url = `https://openapi.programming-hero.com/api/phone/${id}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    displayPhonesDetails(data.data);
+}
+
+const displayPhonesDetails=(phone)=>{
+    const modelTitle=document.getElementById('phoneDetailsModalLabel');
+    modelTitle.innerText=phone.name;
+    const phoneTitle=document.getElementById('phone-details');
+    phoneTitle.innerHTML=`
+    <p>Release Date: ${phone.releaseDate ?phone.releaseDate :'no found date'}</p>
+    <p>Storage: ${phone.mainFeatures ? phone.mainFeatures.storage : 'No storage found'}</p>
+    <p>Others: ${phone.others ? phone.others.Bluetooth : 'No Bluetooth found'}</p>
+    `
+
+
+}
+// loadPhones('apple');

@@ -7,8 +7,16 @@ const loadPhones = async (searchText) => {
 const displayPhones = phones => {
 
     const phoneContainer = document.getElementById('phone-container');
-    phoneContainer.textContent='';
-   phones=phones.slice(0,10);
+    phoneContainer.textContent = '';
+    phones = phones.slice(0, 10);
+
+    const noFoundPhones = document.getElementById('no-phone-found');
+    if (phones.length === 0) {
+        noFoundPhones.classList.remove('d-none');
+    } else {
+        noFoundPhones.classList.add('d-none');
+    }
+
     phones.forEach(phone => {
         const divContainer = document.createElement('div');
         divContainer.classList.add('col')
@@ -26,11 +34,22 @@ const displayPhones = phones => {
         phoneContainer.appendChild(divContainer);
         console.log(phone);
     });
+
+    toggleLoader(false);
 }
 
-document.getElementById('btn-search').addEventListener('click',function(){
-    const searchField=document.getElementById('search-Field');
-    const searchText=searchField.value;
+document.getElementById('btn-search').addEventListener('click', function () {
+    toggleLoader(true);
+    const searchField = document.getElementById('search-Field');
+    const searchText = searchField.value;
     loadPhones(searchText);
-
 })
+const toggleLoader = isLoading => {
+    const loader = document.getElementById('loader');
+
+    if(isLoading){
+        loader.classList.remove('d-none');
+    }else{
+        loader.classList.add('d-none');
+    }
+}
